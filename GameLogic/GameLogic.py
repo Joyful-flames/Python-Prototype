@@ -6,9 +6,7 @@ from Board import blank_board, tier_board
 from Plant import Plant
 from Configration import *
 from data.DataType import *
-from data.PlantType import *
-from PrintTools import read_board
-
+from data.Location import *
 
 def frame_logic(board: Board):
     for index in range(len(board)):

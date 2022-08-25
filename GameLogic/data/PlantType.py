@@ -58,5 +58,3 @@ eucalyptus_tereticornis = {
             'humidity': (0, 100)}
     }
 }
-
-brisbane = [foliicolous_lichens, adiantum_hispidulum, eucalyptus_tereticornis]
