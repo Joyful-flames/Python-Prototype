@@ -1,14 +1,13 @@
-speed_multiplier = 1
-spead_multiplier = 1
-remove_multiplier = 1 # %
-
 # All Plant Type
 foliicolous_lichens = {
     'name': 'Foliicolous',
     'type': 'Lichens',
-    'level': 0,
+    'tier': 0,
     'terran': (),
+    'crowed_range': 2,
     'spread_range': 2,
+    'mature_stage': 0,
+    'mature_percentage': 80,
     'grow_rate': 30,
     'max_density': 1.0,
     'bio_mass': 1,
@@ -21,9 +20,12 @@ foliicolous_lichens = {
 adiantum_hispidulum = {
     'name': 'Maidenhair Fern',
     'type': 'Fern',
-    'level': 1,
+    'tier': 1,
     'terran': (),
-    'seed_range': 2,
+    'crowed_range': 2,
+    'spread_range': 2,
+    'mature_stage': 1,
+    'mature_percentage': 80,
     'grow_rate': 10,
     'max_density': 0.9,
     'bio_mass': 10,
@@ -38,9 +40,12 @@ adiantum_hispidulum = {
 eucalyptus_tereticornis = {
     'name': 'Forest red gum',
     'type': 'Wood',
-    'level': 2,
+    'tier': 2,
     'terran': (),
-    'seed_range': 1,
+    'crowed_range': 1,
+    'spread_range': 1,
+    'mature_stage': 2,
+    'mature_percentage': 80,
     'grow_rate': 1,
     'max_density': 0.3,
     'bio_mass': 70,

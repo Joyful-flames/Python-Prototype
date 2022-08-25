@@ -7,7 +7,7 @@ def blank_board(colum: int, row: int) -> Board:
     for index_colum in range(colum):
         board.append([])
         for index_row in range(row):
-            board[index_colum].append([])
+            board[index_colum].append(None)
     return board
 
 

@@ -1,2 +1,2 @@
-Position = tuple[int,int]
+Position = tuple[int, int]
 Board = list[list]
