@@ -62,7 +62,7 @@ def biomass_board(board: Board) -> Board:
     return new_board
 
 
-def tier_board(board: Board, color_index = 100) -> Board:
+def tier_board(board: Board, color_index=100) -> Board:
     tier_map = []
     for colum in range(len(board)):
         tier_map.append([])
