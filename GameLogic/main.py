@@ -1,5 +1,6 @@
 from GameLogic import game_logic
 
+
 def main() -> None:
     game_logic()
     pass

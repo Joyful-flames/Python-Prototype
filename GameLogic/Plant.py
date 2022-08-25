@@ -48,7 +48,7 @@ class Plant(object):
         :param board:
         :return:
         """
-        if positions != []:
+        if positions:
             colum, row = list(random.choice(positions))
 
             colum: int
