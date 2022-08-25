@@ -2,7 +2,7 @@ import time
 
 import matplotlib.pyplot as plt
 
-from Board import blank_board, tier_board
+from Board import blank_board, tier_board, biomass_board
 from Plant import Plant
 from Configration import *
 from data.DataType import *
@@ -20,14 +20,14 @@ def frame_logic(board: Board):
 def game_logic() -> None:
     iteration = 0
     total_time = 0
-    board = blank_board(50, 50)
+    board = blank_board(map_size, map_size)
 
     half_size = round(len(board) / 2)
     board[half_size][half_size] = Plant(foliicolous_lichens, (half_size, half_size))
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    im = ax.imshow(tier_board(board), cmap='YlGn', vmin=0, vmax=255)
+    im = ax.imshow(biomass_board(board), cmap='YlGn', vmin=0, vmax=255)
     plt.show(block=False)
 
     while True:
@@ -52,7 +52,7 @@ def game_logic() -> None:
             fig.canvas.draw()
             fig.canvas.flush_events()
 
-            time.sleep(0.1)
+            time.sleep(0)
 
         except:
             print(total_time)

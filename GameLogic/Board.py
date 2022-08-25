@@ -70,7 +70,7 @@ def tier_board(board: Board, color_index=100) -> Board:
             current_cell = board[colum][row]
             if type(current_cell) is Plant:
                 current_cell: Plant
-                tier_map[colum].append((current_cell.tier + 1) * color_index)
+                tier_map[colum].append((current_cell.tier) * color_index + 50 + current_cell.stage_percentage / 5)
             else:
                 tier_map[colum].append(0)
     return tier_map

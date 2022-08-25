@@ -6,7 +6,7 @@ from data.DataType import *
 
 class Plant(object):
 
-    def __init__(self, plant_type: dict, position: Position, stage=0, stage_percentage=0):
+    def __init__(self, plant_type: dict, position: Position, stage=0, stage_percentage=0, mst=0): #minimum survival time
 
         # init plant dict
         self.plant_type = plant_type
@@ -25,8 +25,12 @@ class Plant(object):
         self.crowed_range = plant_type['crowed_range']
 
         # init grow status
+        self.mst = mst
         self.stage = stage
         self.stage_percentage = stage_percentage
+
+    def mass(self) -> int:
+        return self.plant_type['bio_mass'] * ((self.stage + 1) * 100 + self.stage_percentage)
 
     def delta_evolution(self, plant_tree: list[dict], delta_tier: int, board: Board) -> Board:
         """ update plant.position() on board with a last or next tier plant.
@@ -85,6 +89,12 @@ class Plant(object):
 
         self.grow()
         self.delta_stage()
+
+        if self.mst != 0:
+            return board
+
+        else:
+            self.mst = random.randrange(100) * self.tier * mst_multiplier
 
         final_spread_range = self.spread_range * spead_multiplier
 
