@@ -76,6 +76,7 @@ def tier_board(board: Board, color_index=100) -> Board:
                 tier_map[colum].append(0)
     return tier_map
 
+
 def count_plant(board: Board, plant_list):
     plain_board = []
     result = []
@@ -91,6 +92,6 @@ def count_plant(board: Board, plant_list):
                 if cell.plant_type == plant:
                     num += 1
 
-        result.append([plant['name'],num])
+        result.append([plant['name'], num])
 
     return result

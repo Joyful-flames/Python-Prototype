@@ -1,4 +1,5 @@
-debug_mode = False
+console_log = True
+plant_action_log = False
 self_evo_mode = False
 input_sim_mode = False
 
