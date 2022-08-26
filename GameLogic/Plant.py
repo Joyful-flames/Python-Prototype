@@ -6,7 +6,8 @@ from data.DataType import *
 
 class Plant(object):
 
-    def __init__(self, plant_type: dict, position: Position, stage=0, stage_percentage=0, mst=0): #minimum survival time
+    def __init__(self, plant_type: dict, position: Position, stage=0, stage_percentage=0,
+                 mst=0):  # minimum survival time
 
         # init plant dict
         self.plant_type = plant_type
@@ -42,7 +43,12 @@ class Plant(object):
         """
         for item in plant_tree:
             if item['tier'] == self.tier + delta_tier:
-                board[self.colum][self.row] = Plant(item, self.position)
+                new_plant = Plant(item, self.position)
+                board[self.colum][self.row] = new_plant
+
+                if plant_action_log:
+                    print('Tier', delta_tier, self.__str__(), '->', new_plant.__str__())
+
         return board
 
     def spread(self, positions: list, board: Board) -> Board:
@@ -58,11 +64,21 @@ class Plant(object):
             colum: int
             row: int
 
-            board[colum][row] = Plant(self.plant_type, (colum, row))
+            new_plant = Plant(self.plant_type, (colum, row))
+            board[colum][row] = new_plant
+
+            if plant_action_log:
+                print('Spread', self.__str__(), ' -> ', new_plant.__str__())
+
+            self.stage_percentage = 0
+
         return board
 
     def grow(self) -> None:
+        old_self = self
         self.stage_percentage += self.grow_rate * grow_speed_multiplier
+        if plant_action_log:
+            print('Grow', self.__str__())
 
     def delta_stage(self) -> None:
 
@@ -83,11 +99,14 @@ class Plant(object):
 
     def is_mature(self) -> bool:
         return (self.stage == self.plant_type['mature_stage']) and (
-                    self.stage_percentage > self.plant_type['mature_percentage'])
+                self.stage_percentage > self.plant_type['mature_percentage'])
 
     def frame_logic(self, board: Board, location: list) -> Board:
 
         self.grow()
+
+        if self.tier == 3: print(self.__str__())
+
         self.delta_stage()
 
         if self.mst != 0:
@@ -163,12 +182,6 @@ class Plant(object):
         action_evolution = False
         action_spread = False
 
-        if debug_mode and self.tier > 0:
-            print('Name:{} Type:{} Status:{}-{}% '.format(self.name,
-                                                          self.type_name,
-                                                          self.stage,
-                                                          self.stage_percentage, ), end='')
-
         if self.is_mature():
             if self.is_crowded(region_density) and random.randrange(100) < remove_chance:
                 action_devolution = True
@@ -179,16 +192,11 @@ class Plant(object):
             elif len(eqtier_cell) == (end_colum - start_colum + 1) * (end_row - start_row + 1):
                 action_evolution = True
 
-        if debug_mode and self.tier > 0:
-            print_str = ' Density:{}/{} Crowed:{} | Devolution:{} Spread:{} Evolution:{} | {}/{}'.format(
-                region_density,
-                self.max_density,
-                self.is_crowded(region_density),
-                action_devolution,
-                action_spread,
-                action_evolution,
-                (len(uppertier_cell + eqtier_cell) + outside_cell_count + 1),
-                (end_colum - start_colum + 1) * (end_row - start_row + 1))
+        if plant_action_log:
+            print_str = ' Density:{}/{} Crowed:{} | Devolution:{} Spread:{} Evolution:{}'.format(
+                region_density, self.max_density, self.is_crowded(region_density), action_devolution,
+                action_spread, action_evolution
+            )
             print(print_str)
 
         if action_devolution:
@@ -197,7 +205,11 @@ class Plant(object):
         elif action_spread:
             return self.spread(empty_cell + lowertier_cell, board)
 
-        elif action_evolution:
+        elif action_evolution and self_evo_mode:
             return self.delta_evolution(location, 1, board)
 
         return board
+
+    def __str__(self):
+        return '{} {}, POS({},{}), S({}-{})'.format(self.name, self.type_name, self.colum, self.row, self.stage,
+                                                    self.stage_percentage)

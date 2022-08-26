@@ -46,7 +46,8 @@ def board_sum_biomass(board: Board):
     score = 0
     for index in range(len(board)):
         for cell in board[index]:
-            score += cell.mass()
+            if type(cell) is Plant:
+                score += cell.mass()
     return score
 
 
@@ -70,7 +71,27 @@ def tier_board(board: Board, color_index=100) -> Board:
             current_cell = board[colum][row]
             if type(current_cell) is Plant:
                 current_cell: Plant
-                tier_map[colum].append((current_cell.tier) * color_index + 50 + current_cell.stage_percentage / 5)
+                tier_map[colum].append((current_cell.tier) * color_index + 50 + current_cell.stage_percentage / 10)
             else:
                 tier_map[colum].append(0)
     return tier_map
+
+
+def count_plant(board: Board, plant_list):
+    plain_board = []
+    result = []
+
+    for colum in board:
+        plain_board += colum
+
+    for plant in plant_list:
+        num = 0
+        for cell in plain_board:
+            if type(cell) is Plant:
+                cell: Plant
+                if cell.plant_type == plant:
+                    num += 1
+
+        result.append([plant['name'], num])
+
+    return result
