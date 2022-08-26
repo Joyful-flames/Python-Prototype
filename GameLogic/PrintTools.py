@@ -1,5 +1,7 @@
 from data.DataType import *
 from Plant import Plant
+from Board import count_plant
+
 
 def read_board(board: Board) -> None:
     for index in range(len(board)):
@@ -10,6 +12,7 @@ def read_board(board: Board) -> None:
             else:
                 print(" |", end='')
         print()
+
 
 def print_board(board: Board) -> None:
     """
@@ -37,3 +40,9 @@ def print_board(board: Board) -> None:
         p_board = []
         print()
     print('------------------------------------------------------------------------------------------')
+
+
+def print_species_count(board: Board, plant_list) -> None:
+    for item in count_plant(board, plant_list):
+        print('{}:{}'.format(item[0],[item[1]]), end='')
+    print()
