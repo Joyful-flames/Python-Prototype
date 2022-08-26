@@ -46,9 +46,9 @@ eucalyptus_tereticornis = {
     'spread_range': 1,
     'mature_stage': 2,
     'mature_percentage': 80,
-    'grow_rate': 1,
+    'grow_rate': 10,
     'max_density': 0.3,
-    'bio_mass': 70,
+    'bio_mass': 100,
     'stage_condition': {
         0: {'hardness': (0, 10),
             'humidity': (0, 100)},

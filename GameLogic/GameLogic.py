@@ -1,20 +1,21 @@
+import random
 import time
 
 import matplotlib.pyplot as plt
 
-from Board import blank_board, tier_board, biomass_board
+from Board import blank_board, tier_board, biomass_board, board_sum_biomass, count_plant
 from Plant import Plant
 from Configration import *
 from data.DataType import *
 from data.Location import *
 
-def frame_logic(board: Board):
+def frame_logic(board: Board, available_plants: list[dict]):
     for index in range(len(board)):
         for cell in board[index]:
             if type(cell) is Plant:
                 cell: Plant
 
-                board = cell.frame_logic(board, brisbane)
+                board = cell.frame_logic(board, available_plants)
 
 
 def game_logic() -> None:
@@ -22,8 +23,12 @@ def game_logic() -> None:
     total_time = 0
     board = blank_board(map_size, map_size)
 
-    half_size = round(len(board) / 2)
-    board[half_size][half_size] = Plant(foliicolous_lichens, (half_size, half_size))
+    available_plants = [brisbane[0]]
+
+    counter_plant_list = [0, 0, 0]
+
+    # half_size = round(len(board) / 2)
+    # board[half_size][half_size] = Plant(foliicolous_lichens, (half_size, half_size))
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -34,14 +39,77 @@ def game_logic() -> None:
 
         start_time = time.time()
 
-        frame_logic(board)
+        frame_logic(board, available_plants)
+
+        total_biomass = board_sum_biomass(board)
+
+        location_tier = 0
+
+
+        if total_biomass > (map_size * map_size * 1000):
+            location_tier = 2
+
+        elif total_biomass > (map_size * map_size * 160):
+            location_tier = 1
+
+        available_plants = brisbane[:location_tier + 1]
 
         end_time = time.time()
 
         total_time += (end_time - start_time)
 
-        if debug_mode:
-            print('Iteration:', iteration)
+        print('Iteration:', iteration, 'Time:', (end_time - start_time))
+
+        # user input
+        if iteration % 10 == 0 and iteration > 0:
+            if input_sim_mode:
+                print(count_plant(board, available_plants))
+                print('Iteration:',iteration,'Biomass:', total_biomass,' Available: ', end='')
+                for item in available_plants:
+                    print(item['type'],' ', end='')
+                user_input = input('\nEnter x,y,tier to insert a plant:\n')
+
+                try:
+                    user_input = user_input.split(' ')
+                    insert_pos = int(user_input[1]),int(user_input[0])
+
+                    for item in available_plants:
+                        if item['tier'] == int(user_input[2]):
+                            insert_plant = Plant(item, insert_pos)
+                            board[insert_pos[0]][insert_pos[1]] = insert_plant
+                            print(insert_plant.__str__())
+                        else:
+                            print('Tier error')
+                except:
+                    print('Input error')
+            else:
+                # Auto test
+                target_colum = random.randrange(0,len(board))
+                target_row = random.randrange(0,len(board[0]))
+
+                board_count = count_plant(board,available_plants)
+
+                print(board_count)
+
+                if total_biomass > (map_size * map_size * 1100) and (counter_plant_list[2] < 5):
+                    board[target_colum][target_row] = Plant(available_plants[2], (target_colum, target_row))
+                    print(board[target_colum][target_row].__str__(), 'Dropped')
+                    counter_plant_list[2] += 1
+
+                elif total_biomass > (map_size * map_size * 180) and counter_plant_list[1] < 5:
+                    board[target_colum][target_row] = Plant(available_plants[1], (target_colum, target_row))
+                    print(board[target_colum][target_row].__str__(), 'Dropped')
+                    counter_plant_list[1] += 1
+
+                elif counter_plant_list[0] < 5:
+                    board[target_colum][target_row] = Plant(available_plants[0], (target_colum, target_row))
+                    print(board[target_colum][target_row].__str__(), 'Dropped')
+                    counter_plant_list[0] += 1
+
+
+
+
+
 
         try:
 
@@ -52,7 +120,6 @@ def game_logic() -> None:
             fig.canvas.draw()
             fig.canvas.flush_events()
 
-            time.sleep(0)
 
         except:
             print(total_time)

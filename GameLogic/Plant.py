@@ -42,7 +42,13 @@ class Plant(object):
         """
         for item in plant_tree:
             if item['tier'] == self.tier + delta_tier:
-                board[self.colum][self.row] = Plant(item, self.position)
+                new_plant = Plant(item, self.position)
+                board[self.colum][self.row] = new_plant
+
+                if self.tier > 2:
+                    print('Tier',delta_tier,self.__str__(),'->',new_plant.__str__())
+
+
         return board
 
     def spread(self, positions: list, board: Board) -> Board:
@@ -58,11 +64,21 @@ class Plant(object):
             colum: int
             row: int
 
-            board[colum][row] = Plant(self.plant_type, (colum, row))
+            new_plant = Plant(self.plant_type, (colum, row))
+            board[colum][row] = new_plant
+
+            if self.tier == 2:
+                print('Spread',self.__str__(),' -> ', new_plant.__str__())
+
+            self.stage_percentage = 0
+
         return board
 
     def grow(self) -> None:
+        old_self = self
         self.stage_percentage += self.grow_rate * grow_speed_multiplier
+        if self.tier == 2:
+            print('Grow', self.__str__())
 
     def delta_stage(self) -> None:
 
@@ -88,6 +104,9 @@ class Plant(object):
     def frame_logic(self, board: Board, location: list) -> Board:
 
         self.grow()
+
+        if self.tier == 3: print(self.__str__())
+
         self.delta_stage()
 
         if self.mst != 0:
@@ -179,7 +198,7 @@ class Plant(object):
             elif len(eqtier_cell) == (end_colum - start_colum + 1) * (end_row - start_row + 1):
                 action_evolution = True
 
-        if debug_mode and self.tier > 0:
+        if self.tier == 3:
             print_str = ' Density:{}/{} Crowed:{} | Devolution:{} Spread:{} Evolution:{} | {}/{}'.format(
                 region_density,
                 self.max_density,
@@ -197,7 +216,10 @@ class Plant(object):
         elif action_spread:
             return self.spread(empty_cell + lowertier_cell, board)
 
-        elif action_evolution:
+        elif action_evolution and self_evo_mode:
             return self.delta_evolution(location, 1, board)
 
         return board
+
+    def __str__(self):
+        return '{} {}, POS({},{}), S({}-{})'.format(self.name, self.type_name, self.colum, self.row, self.stage, self.stage_percentage)
