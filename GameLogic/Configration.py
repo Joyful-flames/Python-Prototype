@@ -1,7 +1,7 @@
 console_log = True
 plant_action_log = False
 self_evo_mode = False
-input_sim_mode = False
+input_sim_mode = True
 
 grow_speed_multiplier = 1
 spead_multiplier = 1
